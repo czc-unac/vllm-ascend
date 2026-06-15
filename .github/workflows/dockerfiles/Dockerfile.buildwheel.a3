@@ -36,7 +36,7 @@ RUN python3 -m pip install -r vllm-ascend/requirements.txt --extra-index https:/
 
 # Install vllm-ascend
 RUN source /usr/local/Ascend/ascend-toolkit/set_env.sh && \
-    source /usr/local/Ascend/nnal/atb/set_env.sh && \
+    source /usr/local/Ascend/nnal/atb/set_env.sh --cxx_abi=1 && \
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/Ascend/ascend-toolkit/latest/`uname -i`-linux/devlib && \
     cd vllm-ascend && \
     python3 setup.py bdist_wheel && \
