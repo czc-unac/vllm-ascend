@@ -44,12 +44,22 @@ on:
         description: 'Continue running the job even if tests fail'
       vllm_short:
         type: string
-        required: true
-        description: 'Short (7-char) vLLM commit/tag for image tag construction.'
+        required: false
+        default: ''
+        description: 'Deprecated. Kept for backward compatibility.'
       ascend_short:
         type: string
+        required: false
+        default: ''
+        description: 'Deprecated. Kept for backward compatibility.'
+      pr_number:
+        type: string
         required: true
-        description: 'Short (7-char) vllm-ascend ref for image tag construction.'
+        description: 'PR number for image tag construction.'
+      vllm_label:
+        type: string
+        required: true
+        description: 'vLLM version label (main/release) for image tag construction.'
 
 # Bash shells do not use ~/.profile or ~/.bashrc so these shells need to be explicitly
 # declared as "shell: bash -el {0}" on steps that need to be properly activated.
@@ -72,7 +82,7 @@ jobs:
         group: ${{ fromJSON(inputs.test_groups) }}
     runs-on: ${{ matrix.group.runner }}
     container:
-      image: quay.io/atlas-ci/vllm-atlas-temp:vllm-ascend-${{ inputs.vllm_short }}-${{ inputs.ascend_short }}-${{ matrix.group.npu_type }}-${{ matrix.group.npu_type == 'cpu' && 'amd64' || 'arm64' }}
+      image: quay.io/atlas-ci/vllm-atlas-temp:vllm-ascend-pr${{ inputs.pr_number }}-${{ inputs.vllm_label }}-${{ matrix.group.npu_type }}-${{ matrix.group.npu_type == 'cpu' && 'amd64' || 'arm64' }}
       env:
         VLLM_LOGGING_LEVEL: ERROR
         VLLM_USE_MODELSCOPE: True
