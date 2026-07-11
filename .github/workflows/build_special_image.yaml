@@ -9,7 +9,15 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-22.04-arm64 # 使用原生 ARM64 runner
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-22.04-arm
+            tag_suffix: arm
+          - runner: ubuntu-arm64
+            tag_suffix: arm64
+      fail-fast: false
+    runs-on: ${{ matrix.runner }} # 使用原生 ARM64 runner
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,7 +40,7 @@ jobs:
           push: true
           platforms: linux/arm64
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:vllm-ascend-8.5.3-a3-openeuler24.03-py3.11-with-patch-260711
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:vllm-ascend-8.5.3-a3-openeuler24.03-py3.11-with-patch-260711-${{ matrix.tag_suffix }}
           build-args: |
             SOC_VERSION=ascend910_9391
             VLLM_REPO=https://github.com/vllm-project/vllm.git
