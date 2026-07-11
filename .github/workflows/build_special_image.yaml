@@ -14,7 +14,7 @@ jobs:
         include:
           - runner: ubuntu-22.04-arm
             tag_suffix: arm
-          - runner: ubuntu-arm64
+          - runner: ubuntu-22.04-arm64
             tag_suffix: arm64
       fail-fast: false
     runs-on: ${{ matrix.runner }} # 使用原生 ARM64 runner
